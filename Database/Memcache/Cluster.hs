@@ -252,4 +252,3 @@ retryOp Cluster{..} s op = go cRetries
     handleErrs n _ = do
         threadDelay cFailDelay
         go n
-
