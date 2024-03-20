@@ -29,9 +29,9 @@ module Database.Memcache.Types (
         Response(..), OpResponse(..), emptyRes
     ) where
 
-import Blaze.ByteString.Builder (Builder)
-import Data.ByteString (ByteString)
-import Data.Word
+import           Blaze.ByteString.Builder (Builder)
+import           Data.ByteString          (ByteString)
+import           Data.Word
 
 -- | SASL Authentication information for a server.
 data Authentication
