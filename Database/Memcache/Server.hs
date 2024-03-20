@@ -135,4 +135,3 @@ withSocket svr = withResource $ pool svr
 close :: Server -> IO ()
 {-# INLINE close #-}
 close srv = destroyAllResources $ pool srv
-

@@ -202,4 +202,3 @@ data Response = Res {
 -- | Noop response.
 emptyRes :: Response
 emptyRes = Res { resOp = ResNoop, resStatus = NoError, resOpaque = 0, resCas = 0 }
-
