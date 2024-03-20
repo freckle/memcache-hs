@@ -21,17 +21,17 @@ module Database.Memcache.Server (
         Server(sid, failed), newServer, sendRecv, withSocket, close
     ) where
 
-import Database.Memcache.SASL
-import Database.Memcache.Socket
+import           Database.Memcache.SASL
+import           Database.Memcache.Socket
 
-import Control.Exception
-import Data.IORef
-import Data.Pool
-import Data.Time.Clock (NominalDiffTime)
-import Data.Time.Clock.POSIX (POSIXTime)
+import           Control.Exception
+import           Data.IORef
+import           Data.Pool
+import           Data.Time.Clock          (NominalDiffTime)
+import           Data.Time.Clock.POSIX    (POSIXTime)
 
-import Network.Socket (getAddrInfo, HostName, ServiceName)
-import qualified Network.Socket as S
+import           Network.Socket           (HostName, ServiceName, getAddrInfo)
+import qualified Network.Socket           as S
 
 -- Connection pool constants.
 -- TODO: make configurable
@@ -44,19 +44,19 @@ sKEEPALIVE = 300
 -- | Memcached server connection.
 data Server = Server {
         -- | ID of server.
-        sid      :: {-# UNPACK #-} !Int,
+        sid    :: {-# UNPACK #-} !Int,
         -- | Connection pool to server.
-        pool     :: Pool Socket,
+        pool   :: Pool Socket,
         -- | Hostname of server.
-        addr     :: !HostName,
+        addr   :: !HostName,
         -- | Port number of server.
-        port     :: !ServiceName,
+        port   :: !ServiceName,
         -- | Credentials for server.
-        auth     :: !Authentication,
+        auth   :: !Authentication,
         -- | When did the server fail? 0 if it is alive.
-        failed   :: IORef POSIXTime
+        failed :: IORef POSIXTime
 
-        -- TODO: 
+        -- TODO:
         -- weight   :: Double
         -- tansport :: Transport (UDP vs. TCP)
         -- poolLim  :: Int (pooled connection limit)
