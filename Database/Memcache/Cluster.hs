@@ -57,7 +57,7 @@ data ServerSpec = ServerSpec {
         -- | Authentication values to use for SASL authentication with this
         -- server.
         ssAuth :: Authentication
-    } deriving (Eq, Show)
+    } deriving (Eq, Show, Ord)
 
 instance Default ServerSpec where
   def = ServerSpec "127.0.0.1" "11211" NoAuth
@@ -126,7 +126,8 @@ data Cluster = Cluster {
 newCluster :: [ServerSpec] -> Options -> IO Cluster
 newCluster []    _ = throwIO $ ClientError NoServersReady
 newCluster hosts Options{..} = do
-    s <- mapM (\ServerSpec{..} -> newServer ssHost ssPort ssAuth) hosts
+    let numServers = length hosts
+    s <- mapM (\(serverIndex, ServerSpec{..}) -> newServer numServers serverIndex ssHost ssPort ssAuth) $ zip [0..] $ sort hosts
     return $
         Cluster {
             cServers   = (V.fromList $ sort s),
