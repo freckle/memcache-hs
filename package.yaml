@@ -1,0 +1,141 @@
+name: memcache
+version: 0.4.0.0
+maintainer: Freckle Education
+category: Database
+github: freckle/memcache-hs
+synopsis: Memcache client
+description: |
+  A client library for a Memcached cluster. Memcached is an in-memory key-value
+  store typically used as a distributed and shared cache. Clients connect to a
+  group of Memcached servers and perform out-of-band caching for things like
+  SQL results, rendered pages, or third-party APIs.
+
+  It supports the binary Memcached protocol and SASL authentication. No support
+  for the ASCII protocol is provided. It supports connecting to a single, or a
+  cluster of Memcached servers. When connecting to a cluser, consistent hashing
+  is used for routing requests to the appropriate server. Timeouts, retrying
+  failed operations, and failover to a different server are all supported.
+
+  Complete coverage of the Memcached protocol is provided except for multi-get
+  and other pipelined operations.
+
+  Basic usage is:
+
+  > import qualified Database.Memcache.Client as M
+  >
+  > mc <- M.newClient [M.ServerSpec "localhost" "11211" M.NoAuth] M.def
+  > M.set mc "key" "value" 0 0
+  > v <- M.get mc "key"
+
+  You should only need to import 'Database.Memcache.Client', but for now other
+  modules are exposed.
+extra-doc-files:
+  - README.md
+  - CHANGELOG.md
+
+extra-source-files:
+  - package.yaml
+
+ghc-options:
+  - -Weverything
+  - -Wno-all-missed-specialisations
+  - -Wno-missed-specialisations
+  - -Wno-missing-exported-signatures # re-enables missing-signatures
+  - -Wno-missing-import-lists
+  - -Wno-missing-local-signatures
+  - -Wno-monomorphism-restriction
+  - -Wno-safe
+  - -Wno-unsafe
+  - -fwrite-ide-info
+
+when:
+  - condition: "impl(ghc >= 9.2)"
+    ghc-options:
+      - -Wno-missing-kind-signatures
+  - condition: "impl(ghc >= 8.10)"
+    ghc-options:
+      - -Wno-missing-safe-haskell-mode
+      - -Wno-prepositive-qualified-module
+
+dependencies:
+  - base < 5
+
+default-extensions:
+  - BangPatterns
+  - DataKinds
+  - DeriveAnyClass
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveGeneric
+  - DeriveLift
+  - DeriveTraversable
+  - DerivingStrategies
+  - FlexibleContexts
+  - FlexibleInstances
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - LambdaCase
+  - MultiParamTypeClasses
+  - NoMonomorphismRestriction
+  - OverloadedStrings
+  - RankNTypes
+  - RecordWildCards
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - TypeApplications
+  - TypeFamilies
+  - NoImplicitPrelude
+
+internal-libraries:
+  internal:
+    source-dirs: internal
+
+library:
+  source-dirs: library
+  dependencies:
+    - internal
+    - binary
+    - blaze-builder
+    - bytestring
+    - data-default-class
+    - hashable
+    - network
+    - range-set-list
+    - resource-pool
+    - time
+    - vector
+
+tests:
+  full:
+    main: Full.hs
+    source-dirs: tests/full
+    ghc-options: -threaded -rtsopts "-with-rtsopts=-N"
+    dependencies:
+      - internal
+      - memcache
+      - binary
+      - blaze-builder
+      - bytestring
+      - network
+  spec:
+    main: Spec.hs
+    source-dirs: tests/spec
+    ghc-options: -threaded -rtsopts "-with-rtsopts=-N"
+    dependencies:
+      - memcache
+      - internal
+      - hspec
+      - QuickCheck
+      - range-set-list
+      - quickcheck-instances
+
+benchmarks:
+  parser:
+    main: Parser.hs
+    source-dirs: bench
+    dependencies:
+      - internal
+      - memcache
+      - binary
+      - bytestring
+      - criterion

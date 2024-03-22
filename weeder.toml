@@ -1,0 +1,10 @@
+roots = [
+  "^Database.Memcache.Client.*",
+  "^Database.Memcache.Cluster.getServers$",
+  "^Database.Memcache.Sid.splitIntRangeIntoNRanges$",
+  "^Main.main$", # Main module from Full.hs
+  "^MockServer.*",
+  "^Paths_.*",
+]
+
+type-class-roots = true
