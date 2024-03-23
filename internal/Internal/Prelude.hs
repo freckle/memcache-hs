@@ -18,7 +18,6 @@ import Prelude as X
   , Monad (..)
   , Monoid (..)
   , Num (..)
-  , (.)
   , Ord (..)
   , Real (..)
   , Show
@@ -37,6 +36,7 @@ import Prelude as X
   , (&&)
   , (++)
   , (-)
+  , (.)
   , (/=)
   , (<$>)
   , (<>)

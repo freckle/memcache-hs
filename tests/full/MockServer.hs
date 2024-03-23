@@ -49,7 +49,7 @@ withMCServer loop res action = do
   bracket
     (mockMCServer sem loop res)
     (\tid -> killThread tid >> threadDelay 100000)
-    (\_tid -> waitForServer >> action )
+    (\_tid -> waitForServer >> action)
 
 -- | New mock Memcached server that responds to each request with the specified
 -- list of responses.

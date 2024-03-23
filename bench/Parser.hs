@@ -5,13 +5,13 @@ module Main (main) where
 
 import Internal.Prelude
 
-import Database.Memcache.Types
 import Criterion.Main
+import Data.Binary.Get (runGet)
+import Data.ByteString.Builder as Builder
 import qualified Data.ByteString.Lazy as L
 import qualified Data.ByteString.Lazy.Char8 as LC
-import Data.ByteString.Builder as Builder
-import Database.Memcache.Socket (szRequest, dzResponse, dzHeader)
-import Data.Binary.Get (runGet)
+import Database.Memcache.Socket (dzHeader, dzResponse, szRequest)
+import Database.Memcache.Types
 
 main :: IO ()
 main =
@@ -32,7 +32,8 @@ szRequest' = Builder.toLazyByteString . szRequest
 
 dzResponse' :: L.ByteString -> Response
 dzResponse' = dzResponse header
-  where header = runGet (dzHeader PktResponse) getRespHeaderBytes
+ where
+  header = runGet (dzHeader PktResponse) getRespHeaderBytes
 
 getReqMsg :: Request
 getReqMsg =
