@@ -1,5 +1,0 @@
-targets:
-memcache:lib
-memcache:test:full
-memcache:test:hspec
-memcache:bench:parser
