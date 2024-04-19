@@ -7,31 +7,35 @@ module Database.Memcache.ElastiCacheClient
   )
 where
 
-import Control.Concurrent (forkIO, threadDelay)
-import Control.Concurrent.MVar (MVar, modifyMVar_, newMVar)
-import Control.Error.Util (note)
-import Control.Exception (bracket)
-import Control.Monad (forever, guard, when, (<=<))
-import Data.Bifunctor (first)
-import Data.ByteString (ByteString)
-import qualified Data.ByteString.Char8 as C
-import Data.List (sort)
-import qualified Data.List.NonEmpty as NE
-import Data.Text (Text)
-import qualified Data.Text as T
-import qualified Data.Text.Encoding as T
-import qualified Data.Vector as V
-import Data.Version (Version, makeVersion)
-import qualified Data.Version as Version
-import Database.Memcache.Client (Client, optsServerSpecsToServers)
-import qualified Database.Memcache.Client as Client
-import Database.Memcache.Cluster (Options, getServers, setServers)
-import Database.Memcache.Server (Server, withSocket)
-import Database.Memcache.Types.ServerSpec (ServerSpec, parseServerSpec)
-import Network.Socket (Socket)
-import qualified Network.Socket.ByteString as N
-import Text.ParserCombinators.ReadP (readP_to_S)
-import UnliftIO.Exception (throwString)
+import           Control.Concurrent                 (forkIO, threadDelay)
+import           Control.Concurrent.MVar            (MVar, modifyMVar_, newMVar)
+import           Control.Error.Util                 (note)
+import           Control.Exception                  (bracket)
+import           Control.Monad                      (forever, guard, when,
+                                                     (<=<))
+import           Data.Bifunctor                     (first)
+import           Data.ByteString                    (ByteString)
+import qualified Data.ByteString.Char8              as C
+import           Data.List                          (sort)
+import qualified Data.List.NonEmpty                 as NE
+import           Data.Text                          (Text)
+import qualified Data.Text                          as T
+import qualified Data.Text.Encoding                 as T
+import qualified Data.Vector                        as V
+import           Data.Version                       (Version, makeVersion)
+import qualified Data.Version                       as Version
+import           Database.Memcache.Client           (Client,
+                                                     optsServerSpecsToServers)
+import qualified Database.Memcache.Client           as Client
+import           Database.Memcache.Cluster          (Options, getServers,
+                                                     setServers)
+import           Database.Memcache.Server           (Server, withSocket)
+import           Database.Memcache.Types.ServerSpec (ServerSpec,
+                                                     parseServerSpec)
+import           Network.Socket                     (Socket)
+import qualified Network.Socket.ByteString          as N
+import           Text.ParserCombinators.ReadP       (readP_to_S)
+import           UnliftIO.Exception                 (throwString)
 
 -- A /Configuration Endpoint/ will always contain /.cfg/ in its address:
 --
@@ -54,7 +58,7 @@ parseVersion = interpretParseResults . delegateParse . C.unpack . C.dropEnd (C.l
       let tail' = NE.last results
       case tail' of
         (version, "") -> pure version
-        (_, rest) -> Left $ "eof expected. Got: " <> rest
+        (_, rest)     -> Left $ "eof expected. Got: " <> rest
 
 -- | Newtype over a 'ServerSpec'.
 --
@@ -104,7 +108,7 @@ resolveCluster cfgClient = do
 
   server <-
     case V.uncons servers of
-      Nothing -> throwString "No servers were found"
+      Nothing     -> throwString "No servers were found"
       Just (s, _) -> pure s
 
   withSocket server $ \socket -> do
@@ -160,7 +164,7 @@ resolveViaAutoDiscoveryKey cfg = do
   mResponse <- Client.get cfg autoDiscoveryKey
 
   case mResponse of
-    Nothing -> throwString "AmazonElastiCache:cluster get failed"
+    Nothing        -> throwString "AmazonElastiCache:cluster get failed"
     Just (v, _, _) -> pure v
 
 -- Before 'firstCfgCmdVersion', /ElastiCache/ stored configuration in a special-purpose key within the /Configuration Endpoint/.
